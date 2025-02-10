@@ -10,6 +10,7 @@ router.register("menus", views.DailyMenuViewSet)
 router.register("menu-items", views.MenuItemViewSet)
 
 router.register("votes", views.VoteViewSet)
+router.register("most-voted", views.MostVotedMenuViewSet, basename="most-voted")
 urlpatterns = [
     path("", include(router.urls)),
 ]
