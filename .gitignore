@@ -335,3 +335,4 @@ poetry.toml
 pyrightconfig.json
 
 # Operating System, etc.
+.DS_Store
