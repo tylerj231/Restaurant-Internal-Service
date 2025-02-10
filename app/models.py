@@ -1,5 +1,8 @@
+from django.utils import timezone
 
 from django.db import models
+from rest_framework.exceptions import ValidationError
+
 from user.models import Employee
 
 class Restaurant(models.Model):
@@ -52,3 +55,12 @@ class Vote(models.Model):
 
    class Meta:
        unique_together = ('menu', 'employee')
+
+   def clean(self):
+       if not self.menu.is_active:
+           raise ValidationError('Menu is not active')
+       if self.menu.date != timezone.now().date():
+           raise ValidationError("Can only vote for today's menu")
+
+       if timezone.now().hour >= 13:
+           raise ValidationError("Voting is possible until lunch time")
