@@ -23,6 +23,9 @@ class DailyMenu(models.Model):
     class Meta:
         unique_together = ('restaurant', 'date')
 
+    def __str__(self):
+        return f"{self.restaurant.name} menu"
+
 class MenuItem(models.Model):
     daily_menu = models.ForeignKey(
         DailyMenu,
