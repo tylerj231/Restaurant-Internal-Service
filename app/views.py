@@ -20,3 +20,10 @@ class MenuItemViewSet(viewsets.ModelViewSet):
 class VoteViewSet(viewsets.ModelViewSet):
     queryset = Vote.objects.all()
     serializer_class = VoteSerializer
+
+    def get_queryset(self):
+        queryset = Vote.objects.filter(employee=self.request.user)
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(employee=self.request.user)

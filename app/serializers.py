@@ -1,4 +1,7 @@
+from django.utils import timezone
+
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from app.models import Restaurant, DailyMenu, MenuItem, Vote
 
@@ -38,7 +41,19 @@ class RestaurantSerializer(serializers.ModelSerializer):
         read_only_fields = ("id",)
 
 class VoteSerializer(serializers.ModelSerializer):
-    menu = DailyMenuListSerializer(many=False, read_only=True)
     class Meta:
         model = Vote
         fields = ("menu", "voted_at")
+        read_only_fields = ("voted_at",)
+
+    def validate(self, data):
+        menu = data["menu"]
+        employee = self.context["request"].user
+
+        if Vote.objects.filter(menu=menu, employee=employee).exists():
+            raise ValidationError("You already voted for this menu")
+
+        if timezone.now().hour >= 13:
+            raise ValidationError("Voting is possible until lunch time (1 PM) ")
+
+        return data
