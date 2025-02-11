@@ -9,7 +9,14 @@ from app.models import Restaurant, DailyMenu, MenuItem, Vote
 class MenuItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = MenuItem
-        fields = ("id", "name", "price", "category", "dietary_information", "daily_menu")
+        fields = (
+            "id",
+            "name",
+            "price",
+            "category",
+            "dietary_information",
+            "daily_menu",
+        )
 
 
 class MenuItemListSerializer(serializers.ModelSerializer):
@@ -22,8 +29,7 @@ class DailyMenuSerializer(serializers.ModelSerializer):
     vote_count = serializers.SerializerMethodField()
     menu_item = MenuItemListSerializer(many=True, read_only=True)
     restaurant = serializers.SlugRelatedField(
-        slug_field="name",
-        queryset=Restaurant.objects.all()
+        slug_field="name", queryset=Restaurant.objects.all()
     )
 
     class Meta:
@@ -31,7 +37,7 @@ class DailyMenuSerializer(serializers.ModelSerializer):
         fields = ("id", "date", "is_active", "restaurant", "menu_item", "vote_count")
 
     def get_vote_count(self, obj):
-        return getattr(obj, 'vote_count', obj.votes.count())
+        return getattr(obj, "vote_count", obj.votes.count())
 
 
 class DailyMenuListSerializer(serializers.ModelSerializer):
@@ -39,7 +45,10 @@ class DailyMenuListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DailyMenu
-        fields = ("is_active", "menu_item",)
+        fields = (
+            "is_active",
+            "menu_item",
+        )
 
 
 class RestaurantSerializer(serializers.ModelSerializer):
