@@ -24,10 +24,10 @@ Internal service for restaurant employees which helps them to make a decision at
 ## Running API with docker
 **Docker should be installed, and db properly configured.(see above)**
 
-- docker-compose build
-- docker-compose up
-- Create admin user. First: "docker exec -it [container identifier hash] bash" then: "python manage.py createsuperuser"
-- To run tests: python manage.py test. (You should be inside the container)
+- **docker-compose build**
+- **docker-compose up**
+- **Create admin user. First: "docker exec -it [container identifier hash] bash" then: "python manage.py createsuperuser"**
+- **To run tests: python manage.py test. (You should be inside the container)**
 - ##### ! **Please note:** you might need to rerun docker container upon building it, as django app might finish to initialize faster, hence will try to connect to db, which has not been initialized yet.
 
 ****

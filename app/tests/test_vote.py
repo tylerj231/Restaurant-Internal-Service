@@ -17,18 +17,18 @@ class AuthenticatedUserTest(TestCase):
         )
         self.client.force_authenticate(user=self.user)
 
-    def test_get_votes(self):
-        restaurant = Restaurant.objects.create(
+        self.restaurant = Restaurant.objects.create(
             name="Macdonald",
             address="123 Main St.",
             contact_information="123-444-55",
         )
-        menu = DailyMenu.objects.create(
+        self.menu = DailyMenu.objects.create(
             date=timezone.now().date(),
             is_active=True,
-            restaurant=restaurant,
+            restaurant=self.restaurant,
         )
-        Vote.objects.create(employee=self.user, voted_at=timezone.now(), menu=menu)
+
+    def test_get_votes(self):
         votes = Vote.objects.all()
         serializer = VoteSerializer(votes, many=True)
         url = reverse("app:vote-list")
@@ -37,41 +37,22 @@ class AuthenticatedUserTest(TestCase):
         self.assertEqual(response.data, serializer.data)
 
     def test_create_vote_allowed_for_employee(self):
-        restaurant = Restaurant.objects.create(
-            name="Macdonald",
-            address="123 Main St.",
-            contact_information="123-444-55",
-        )
-        menu = DailyMenu.objects.create(
-            date=timezone.now().date(),
-            is_active=True,
-            restaurant=restaurant,
-        )
         payload = {
             "employee": self.user,
             "voted_at": timezone.now(),
-            "menu": menu.id,
+            "menu": self.menu.id,
         }
         url = reverse("app:vote-list")
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_delete_vote_allowed_for_employee(self):
-        restaurant = Restaurant.objects.create(
-            name="Macdonald",
-            address="123 Main St.",
-            contact_information="123-444-55",
-        )
-        menu = DailyMenu.objects.create(
-            date=timezone.now().date(),
-            is_active=True,
-            restaurant=restaurant,
-        )
         vote = Vote.objects.create(
             employee=self.user,
             voted_at=timezone.now(),
-            menu=menu,
+            menu=self.menu,
         )
+
         url = reverse("app:vote-detail", args=[vote.id])
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

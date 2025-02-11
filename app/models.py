@@ -41,6 +41,7 @@ class MenuItem(models.Model):
 
 
 class Vote(models.Model):
+    TIME_NOW = timezone.now().hour
     menu = models.ForeignKey(DailyMenu, on_delete=models.CASCADE, related_name="votes")
     employee = models.ForeignKey(
         Employee, on_delete=models.CASCADE, related_name="votes"
@@ -56,5 +57,5 @@ class Vote(models.Model):
         if self.menu.date != timezone.now().date():
             raise ValidationError("Can only vote for today's menu")
 
-        if timezone.now().hour >= 13:
+        if self.TIME_NOW >= 13:
             raise ValidationError("Voting is possible until lunch time")

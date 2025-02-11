@@ -17,16 +17,17 @@ class AuthenticatedUserTest(TestCase):
         )
         self.client.force_authenticate(user=self.user)
 
-    def test_get_restaurant(self):
-        Restaurant.objects.create(
+        self.restaurant = Restaurant.objects.create(
             name="Macdonald",
             address="123 Main St.",
             contact_information="123-444-55",
         )
+
+    def test_get_restaurant(self):
         url = reverse("app:restaurant-list")
         response = self.client.get(url)
-        restautrants = Restaurant.objects.all()
-        serializer = RestaurantSerializer(restautrants, many=True)
+        restaurants = Restaurant.objects.all()
+        serializer = RestaurantSerializer(restaurants, many=True)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
@@ -42,12 +43,8 @@ class AuthenticatedUserTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_delete_restaurant_forbidden_for_employee(self):
-        restaurant = Restaurant.objects.create(
-            name="Macdonald",
-            address="123 Main St.",
-            contact_information="123-444-55",
-        )
-        url = reverse("app:restaurant-detail", args=[restaurant.id])
+
+        url = reverse("app:restaurant-detail", args=[self.restaurant.id])
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -67,12 +64,7 @@ class AuthenticatedUserTest(TestCase):
     def test_admin_delete_restaurant_allow(self):
         self.user.is_staff = True
         self.user.save()
-        restaurant = Restaurant.objects.create(
-            name="Macdonald",
-            address="123 Main St.",
-            contact_information="123-444-55",
-        )
 
-        url = reverse("app:restaurant-detail", args=[restaurant.id])
+        url = reverse("app:restaurant-detail", args=[self.restaurant.id])
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

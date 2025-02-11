@@ -61,6 +61,8 @@ class RestaurantSerializer(serializers.ModelSerializer):
 
 
 class VoteSerializer(serializers.ModelSerializer):
+    TIME_NOW = timezone.now().hour
+
     class Meta:
         model = Vote
         fields = ("menu", "voted_at")
@@ -73,7 +75,7 @@ class VoteSerializer(serializers.ModelSerializer):
         if Vote.objects.filter(menu=menu, employee=employee).exists():
             raise ValidationError("You already voted for this menu")
 
-        if timezone.now().hour >= 13:
+        if self.TIME_NOW >= 13:
             raise ValidationError("Voting is possible until lunch time (1 PM) ")
 
         return data
