@@ -5,8 +5,14 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 
-BASE_URL =  reverse("app:restaurant-list")
-DETAIL_URL = reverse("app:restaurant-detail", args=[1,])
+BASE_URL = reverse("app:restaurant-list")
+DETAIL_URL = reverse(
+    "app:restaurant-detail",
+    args=[
+        1,
+    ],
+)
+
 
 class UnauthenticatedUserTest(TestCase):
     def setUp(self):

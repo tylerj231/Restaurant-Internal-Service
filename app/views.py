@@ -1,5 +1,6 @@
 from django.db.models import Count
 from django.utils import timezone
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -34,6 +35,19 @@ class DailyMenuViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(date=date)
 
         return queryset
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "date",
+                type=str,
+                description="Filter daily menu by date: Ex. ?date=2025-02-10",
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class MenuItemViewSet(viewsets.ModelViewSet):

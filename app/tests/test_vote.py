@@ -14,7 +14,6 @@ class AuthenticatedUserTest(TestCase):
         self.user = get_user_model().objects.create_user(
             email="test@gmail.com",
             password="test123",
-
         )
         self.client.force_authenticate(user=self.user)
 
@@ -29,12 +28,7 @@ class AuthenticatedUserTest(TestCase):
             is_active=True,
             restaurant=restaurant,
         )
-        Vote.objects.create(
-            employee=self.user,
-            voted_at=timezone.now(),
-            menu=menu
-
-        )
+        Vote.objects.create(employee=self.user, voted_at=timezone.now(), menu=menu)
         votes = Vote.objects.all()
         serializer = VoteSerializer(votes, many=True)
         url = reverse("app:vote-list")
