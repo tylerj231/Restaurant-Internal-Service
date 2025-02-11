@@ -7,7 +7,11 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from app.models import MenuItem, DailyMenu, Restaurant
-from app.serializers import MenuItemSerializer, DailyMenuSerializer, RestaurantSerializer
+from app.serializers import (
+    MenuItemSerializer,
+    DailyMenuSerializer,
+    RestaurantSerializer,
+)
 
 
 class AuthenticatedUserTest(TestCase):
@@ -16,7 +20,6 @@ class AuthenticatedUserTest(TestCase):
         self.user = get_user_model().objects.create_user(
             email="test@gmail.com",
             password="test123",
-
         )
         self.client.force_authenticate(user=self.user)
 
@@ -41,7 +44,7 @@ class AuthenticatedUserTest(TestCase):
         menu_items = MenuItem.objects.all()
         serializer = MenuItemSerializer(menu_items, many=True)
 
-        url = reverse('app:menuitem-list')
+        url = reverse("app:menuitem-list")
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -66,7 +69,7 @@ class AuthenticatedUserTest(TestCase):
             "dietary_information": "non-vegan",
             "daily_menu": daily_menu,
         }
-        url = reverse('app:menuitem-list')
+        url = reverse("app:menuitem-list")
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -88,7 +91,7 @@ class AuthenticatedUserTest(TestCase):
             dietary_information="non-vegan",
             daily_menu=daily_menu,
         )
-        url = reverse('app:menuitem-list')
+        url = reverse("app:menuitem-list")
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -116,7 +119,7 @@ class AuthenticatedUserTest(TestCase):
             "daily_menu": daily_menu.id,
         }
 
-        url = reverse('app:menuitem-list')
+        url = reverse("app:menuitem-list")
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 

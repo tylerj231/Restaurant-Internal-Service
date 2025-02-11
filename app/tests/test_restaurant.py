@@ -14,7 +14,6 @@ class AuthenticatedUserTest(TestCase):
         self.user = get_user_model().objects.create_user(
             email="test@gmail.com",
             password="test123",
-
         )
         self.client.force_authenticate(user=self.user)
 
@@ -24,7 +23,7 @@ class AuthenticatedUserTest(TestCase):
             address="123 Main St.",
             contact_information="123-444-55",
         )
-        url = reverse('app:restaurant-list')
+        url = reverse("app:restaurant-list")
         response = self.client.get(url)
         restautrants = Restaurant.objects.all()
         serializer = RestaurantSerializer(restautrants, many=True)
@@ -33,7 +32,7 @@ class AuthenticatedUserTest(TestCase):
         self.assertEqual(response.data, serializer.data)
 
     def test_create_restaurant_forbidden_for_employee(self):
-        url = reverse('app:restaurant-list')
+        url = reverse("app:restaurant-list")
         payload = {
             "name": "Macdonald",
             "address": "123 Main St.",
@@ -48,7 +47,7 @@ class AuthenticatedUserTest(TestCase):
             address="123 Main St.",
             contact_information="123-444-55",
         )
-        url = reverse('app:restaurant-detail', args=[restaurant.id])
+        url = reverse("app:restaurant-detail", args=[restaurant.id])
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
