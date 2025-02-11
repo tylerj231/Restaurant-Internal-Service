@@ -5,11 +5,11 @@ from app import views
 
 app_name = "app"
 router = DefaultRouter()
-router.register("restaurants", views.RestaurantViewSet)
-router.register("menus", views.DailyMenuViewSet)
-router.register("menu-items", views.MenuItemViewSet)
+router.register("restaurants", views.RestaurantViewSet, basename="restaurant")
+router.register("menus", views.DailyMenuViewSet, basename="menus")
+router.register("menu-items", views.MenuItemViewSet, basename="menu-items")
 
-router.register("votes", views.VoteViewSet)
+router.register("votes", views.VoteViewSet, basename="vote")
 router.register("most-voted", views.MostVotedMenuViewSet, basename="most-voted")
 urlpatterns = [
     path("", include(router.urls)),

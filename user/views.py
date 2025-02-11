@@ -2,6 +2,7 @@ from rest_framework import generics
 
 from user.serializers import EmployeeSerializer
 
+
 class CreateEmployeeView(generics.CreateAPIView):
     serializer_class = EmployeeSerializer
 

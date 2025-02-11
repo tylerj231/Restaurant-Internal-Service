@@ -57,8 +57,8 @@ class MenuItemViewSet(viewsets.ModelViewSet):
 
 
 class VoteViewSet(viewsets.ModelViewSet):
-    queryset = Vote.objects.all()
     serializer_class = VoteSerializer
+    queryset = Vote.objects.all()
 
     def get_queryset(self):
         queryset = Vote.objects.filter(employee=self.request.user)
